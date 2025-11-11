@@ -1,0 +1,31 @@
+.list{
+  width: 100%;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-direction: column;
+
+}
+.banner{
+  padding-top: 100%;
+  width: 100%;
+
+}
+.item{
+  height: 80px;
+  width: 100%;
+}
+.banner, .item{
+  background: linear-gradient(100deg, #f2f4f5 40%, #e6e8ea 50%, #f2f4f5 60%);
+  animation: shimmer 1.5s infinite;
+  background-size: 400% 400%;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
