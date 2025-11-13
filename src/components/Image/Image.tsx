@@ -6,7 +6,6 @@ type Props = {
 }
 
 export const Image = ({item, className}: Props) => {
-  console.log(s)
   return (
     <div className={s.wrapper}>
       {item &&

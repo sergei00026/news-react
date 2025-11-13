@@ -3,29 +3,34 @@ import {NewsBanner} from "../../components/NewsBanner/NewsBanner.tsx";
 import {getNews} from "../../api/apiNews.ts";
 import {useEffect, useState} from "react";
 import type {NewsApiResponse} from "../../types/NewsResponse.ts";
-import {NewsList} from "../../components/Header/NewsLIst/NewsList.tsx";
 import {Skeleton} from "../../components/Skeleton/Skeleton.tsx";
+import {NewsList} from "../../components/NewsLIst/NewsList.tsx";
+import {Pagination} from "../../components/Pagination/Pagination.tsx";
 
 export const Main = () => {
   const [news, setNews] = useState<NewsApiResponse>()
   const [loading, setLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const totalCount = 10
+
+  const fetchData = async () => {
+    try {
+      setLoading(true)
+
+      const response = await getNews(currentPage);
+
+      setNews(response);
+      setLoading(false)
+
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-
-      const fetchData = async () => {
-        try {
-          setLoading(true)
-          const responce = await getNews();
-
-          setNews(responce);
-          setLoading(false)
-        } catch (error) {
-          console.error('Error fetching data:', error);
-          setLoading(false)
-        }
-      }
       fetchData()
-    }, []
+    }, [currentPage]
   );
 
   // Если нет новостей
@@ -37,6 +42,7 @@ export const Main = () => {
   return (
     <main className={s.main}>
       {loading ? <Skeleton type="banner" count={1}/> : <NewsBanner news={news.results}/>}
+      <Pagination totalCount={totalCount} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
       {loading ? <Skeleton count={10}/> : <NewsList news={news.results}/>}
     </main>
   );
