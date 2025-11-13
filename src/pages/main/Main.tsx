@@ -30,6 +30,7 @@ export const Main = () => {
 
   useEffect(() => {
       fetchData()
+    console.log(currentPage)
     }, [currentPage]
   );
 
