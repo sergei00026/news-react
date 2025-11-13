@@ -11,9 +11,15 @@ export const Pagination = ({totalCount, currentPage, setCurrentPage}: Props) => 
     if (currentPage > 1) setCurrentPage(currentPage - 1)
   }
   const handleNextPage = () => {
-    if (currentPage === totalCount) setCurrentPage(currentPage + 1)
-    debugger
+    if (currentPage < totalCount) {
+      setCurrentPage(currentPage + 1)
+    }
   }
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+  }
+
 
   return (
     <div className={s.pagination}>
@@ -23,6 +29,7 @@ export const Pagination = ({totalCount, currentPage, setCurrentPage}: Props) => 
       {[...Array(totalCount)].map((_, index) => {
         return (
           <button
+            onClick={()=>handlePageChange(index + 1)}
             key={index}
             className={s.button}
             disabled={index + 1 === currentPage}

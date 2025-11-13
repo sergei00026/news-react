@@ -1,0 +1,10 @@
+.list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #f2f4f5;
+  padding-bottom: 24px;
+  gap: 12px;
+}
+
+/*# sourceMappingURL=newsList.module.css.map */
