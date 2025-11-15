@@ -2,46 +2,51 @@ import s from "./pagination.module.scss"
 
 export type Props = {
   totalCount: number
-  currentPage: number
-  setCurrentPage: (num: number) => void
+  currentPage: number;
+
+  // кнопка Next
+  onNext: () => void;
+
+  // кнопка Prev
+  onPrev: () => void;
+
+  goToPage: (n: number) => void;
+
+  hasNext: boolean;
+  hasPrev: boolean;
 }
-export const Pagination = ({totalCount, currentPage, setCurrentPage}: Props) => {
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1)
-  }
-  const handleNextPage = () => {
-    if (currentPage < totalCount) {
-      setCurrentPage(currentPage + 1)
-    }
-  }
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-  }
-
+export const Pagination = ({totalCount, onNext, onPrev,  goToPage, currentPage}: Props) => {
+  const isFirstPage = currentPage === 1
+  const isLastPage = currentPage === totalCount
 
   return (
     <div className={s.pagination}>
       <button
-        onClick={handlePrevPage}
-        className={s.button} disabled={currentPage === 1}>&lt;</button>
+        onClick={onPrev}
+        className={s.button} disabled={isFirstPage}>&lt;</button>
       {[...Array(totalCount)].map((_, index) => {
+        const pageNum = index + 1;
+        const isActive = pageNum === currentPage;
+
+
         return (
           <button
-            onClick={()=>handlePageChange(index + 1)}
             key={index}
-            className={s.button}
-            disabled={index + 1 === currentPage}
+            className={`${s.button} ${pageNum === currentPage ? s.active : ""}`}
+            onClick={() => goToPage(pageNum)}
+            disabled={isActive}
           >
-            {index + 1}
+            {pageNum}
           </button>
-        )
+        );
       })}
+
+
       <button
-        onClick={handleNextPage}
+        onClick={onNext}
         className={s.button}
-        disabled={currentPage === totalCount}>&gt;</button>
+        disabled={isLastPage}
+      >&gt;</button>
     </div>
   );
 };
