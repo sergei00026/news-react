@@ -31,4 +31,26 @@ export interface NewsApiResponse {
   status: string;
   totalResults: number;
   results: Article[];
+  nextPage?: string;
 }
+
+export const NewsCategory = {
+  BUSINESS: "business",
+  CRIME: "crime",
+  DOMESTIC: "domestic",
+  EDUCATION: "education",
+  ENTERTAINMENT: "entertainment",
+  ENVIRONMENT: "environment",
+  FOOD: "food",
+  HEALTH: "health",
+  LIFESTYLE: "lifestyle",
+  OTHER: "other",
+  POLITICS: "politics",
+  SCIENCE: "science",
+  SPORTS: "sports",
+  TECHNOLOGY: "technology",
+  TOP: "top",
+  TOURISM: "tourism",
+  WORLD: "world",
+} as const;
+export type NewsCategoryType = typeof NewsCategory[keyof typeof NewsCategory];
