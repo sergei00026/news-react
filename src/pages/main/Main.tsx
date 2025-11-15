@@ -7,6 +7,8 @@ import {Skeleton} from "../../components/Skeleton/Skeleton.tsx";
 import {NewsList} from "../../components/NewsLIst/NewsList.tsx";
 import {Pagination} from "../../components/Pagination/Pagination.tsx";
 import {Category} from "../../components/Category/Category.tsx";
+import {Search} from "../../components/Search/Search.tsx";
+import {useDeferred} from "../../helpers/hooks/useDeferred.ts";
 
 export const Main = () => {
   const [news, setNews] = useState<NewsApiResponse>()
@@ -24,13 +26,12 @@ export const Main = () => {
   // Кол-во кнопок — рисуем просто UI
   const totalCount = 10
 
-
   // Загрузка новостей по токену
   const fetchNews = async () => {
     try {
       setLoading(true)
 
-      const response = await getNews(currentToken, categories);
+      const response = await getNews(currentToken, categories, deferredWord);
       setNews(response);
 
       // если это НЕ последняя страница и токен ещё не сохранён — добавляем
@@ -78,20 +79,42 @@ export const Main = () => {
       setCategories(category)
     }
   }
+
+  const [keyword, setKeyword] = useState<string | number | readonly string[] | undefined>(undefined)
+
+  const handleKeyword = (word: string) => {
+    if (word === '') {
+      console.log(word)
+      return
+    } else {
+      setKeyword(word)
+      console.log(word)
+    }
+  }
+  // Задержка в 1.5сек в поиске
+  const deferredWord = useDeferred(keyword, 1500)
+
   useEffect(() => {
       fetchNews()
-    }, [currentToken, categories]
+    }, [currentToken, categories, deferredWord]
   );
 
   // Если нет новостей
   if (!news?.results || news.results.length === 0) {
-    return <div className={s.main}>No news available</div>
+    return <main className={s.main}>
+      <Skeleton type="banner" count={1}/>
+      <Skeleton count={10}/>
+    </main>
   }
 
   return (
     <main className={s.main}>
-      {loading ? <Skeleton type="banner" count={1}/> : <NewsBanner news={news.results}/>}
+      <Search keyword={keyword} setKeyword={handleKeyword}/>
+
       <Category categories={categories || null} setCategory={handleCategoryChange}/>
+
+      {loading ? <Skeleton type="banner" count={1}/> : <NewsBanner news={news.results}/>}
+
       <Pagination
         totalCount={totalCount}
         currentPage={currentPage}
@@ -101,7 +124,9 @@ export const Main = () => {
         hasNext={!!news.nextPage}
         hasPrev={currentPage > 1}
       />
+
       {loading ? <Skeleton count={10}/> : <NewsList news={news.results}/>}
+
       <Pagination
         totalCount={totalCount}
         currentPage={currentPage}
