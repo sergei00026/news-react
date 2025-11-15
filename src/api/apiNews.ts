@@ -4,13 +4,14 @@ import {type NewsCategoryType} from '../types/NewsResponse'
 const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
 const BASE_URL = import.meta.env.VITE_NEWS_BASE_URL;
 
-export async function getNews(token: string | null | undefined, category?: NewsCategoryType | null) {
+export async function getNews(token: string | null | undefined, category?: NewsCategoryType | null, q?: string | number | readonly string[] | undefined) {
   try {
     const response = await axios.get(`${BASE_URL}latest`, {
       params: {
         apikey: API_KEY,
         page: token || undefined,
-        category
+        category,
+        q
 
       }
     });
